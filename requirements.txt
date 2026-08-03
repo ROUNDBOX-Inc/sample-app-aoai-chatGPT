@@ -1,12 +1,36 @@
-azure-identity==1.15.0
-Flask[async]==3.0.3
-openai==1.55.3
-azure-search-documents==11.4.0b6
-azure-storage-blob==12.17.0
-python-dotenv==1.0.0
-azure-cosmos==4.5.0
-quart==0.19.9
-uvicorn==0.24.0
-aiohttp==3.9.2
-gunicorn==20.1.0
-pydantic-settings==2.2.1
+## ROUNDBOX-SecureSphere — requirements.txt endurecido
+## Base: microsoft/sample-app-aoai-chatGPT @ main
+## Resolución verificada con pip --dry-run en Python 3.11 (sin conflictos)
+## Cierra: 27 hallazgos SCA de Defender for Cloud (9 High / 8 Medium / 1 Low)
+
+# --- dependencias directas del acelerador (versiones subidas) ---
+azure-identity==1.16.1          # CVE-2024-35255            (era 1.15.0)
+Flask[async]==3.1.3             # CVE-2026-27205            (era 3.0.3)
+openai==1.55.3                 # sin hallazgos — sin cambio
+azure-search-documents==11.4.0b6 # sin hallazgos — sin cambio
+azure-storage-blob==12.17.0     # sin hallazgos — sin cambio
+python-dotenv==1.2.2            # CVE-2026-28684            (era 1.0.0)
+azure-cosmos==4.5.0             # sin hallazgos — sin cambio
+quart==0.20.0                   # CVE-2024-49767            (era 0.19.9)
+uvicorn==0.24.0                 # sin hallazgos — sin cambio
+aiohttp==3.14.1                 # 33 CVEs, incl. CVE-2024-27306  (era 3.9.2)
+gunicorn==22.0.0                # CVE-2024-1135 / CVE-2024-6827  (era 20.1.0)
+pydantic-settings==2.2.1        # sin hallazgos — sin cambio
+
+# --- transitivas pineadas a la fuerza (no estaban en el archivo original) ---
+azure-core==1.38.0              # CVE-2026-21226  RCE por deserialización
+cryptography==46.0.6            # CVE-2024-12797 + 2 más (OpenSSL estático)
+h11==0.16.0                     # CVE-2025-43859  request smuggling
+h2==4.3.0                       # CVE-2025-57804  HTTP/2 request splitting
+idna==3.15                      # CVE-2026-45409  DoS
+Jinja2==3.1.6                   # CVE-2025-27516  bypass de sandbox -> RCE
+PyJWT==2.13.0                   # 6 CVEs — no valida header 'crit'
+requests==2.33.0                # CVE-2024-47081  fuga de .netrc
+urllib3==2.7.0                  # 6 CVEs, incl. CVE-2025-50181 SSRF
+Werkzeug==3.1.6                 # CVE-2025-66221 + 2 más
+
+# --- toolchain de build (Oryx trae 65.5.0 por defecto) ---
+setuptools==83.0.0              # CVE-2022-40897 ReDoS + 3 más
+
+# NOTA: pip 24.0 -> 26.1.2 (5 CVEs) NO se arregla desde aquí; pip lo provee la
+# imagen de build de Oryx. Requiere migrar a contenedor propio.
